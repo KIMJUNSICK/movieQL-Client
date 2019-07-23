@@ -16,7 +16,7 @@ const home = () => (
     <Query query={HOME_PAGE}>
       {({ loading, data, error }) => {
         if (loading) return <span>loading</span>;
-        if (error) return <span>something happened</span>;
+        if (error) return <span>something happened... Error!</span>;
         return data.movies.map(movie => (
           <Movie
             id={movie.id}
