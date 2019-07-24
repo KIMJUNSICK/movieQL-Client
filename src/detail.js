@@ -3,6 +3,7 @@ import { Query } from "react-apollo";
 import { MOVIE_DETAILS } from "./queries";
 import Movie from "./Movie";
 import styled from "styled-components";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   display: grid;
@@ -44,11 +45,21 @@ const detail = ({
 }) => (
   <Query query={MOVIE_DETAILS} variables={{ movieId: parseInt(movieId) }}>
     {({ loading, error, data }) => {
-      if (loading) return "loading";
+      if (loading)
+        return (
+          <Fragment>
+            <Helmet>
+              <title>Loading | MovieQL</title>
+            </Helmet>
+          </Fragment>
+        );
       if (error) return "error";
       return (
         <Fragment>
           <Container>
+            <Helmet>
+              <title>{data.movie.title} | MovieQL</title>
+            </Helmet>
             <Image src={data.movie.medium_cover_image} />
             <span>
               <Title>{data.movie.title}</Title>
