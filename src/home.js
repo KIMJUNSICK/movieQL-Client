@@ -1,9 +1,9 @@
 import React from "react";
-import { Query } from "react-apollo";
 import styled from "styled-components";
 import { Helmet } from "react-helmet";
 import { HOME_PAGE } from "./queries";
 import Movie from "./Movie";
+import { useQuery as UseQuery } from "react-apollo-hooks";
 
 const Container = styled.div`
   display: grid;
@@ -12,16 +12,19 @@ const Container = styled.div`
   justify-items: center;
 `;
 
-const home = () => (
-  <Container>
-    <Helmet>
-      <title>Home | MovieQL</title>
-    </Helmet>
-    <Query query={HOME_PAGE}>
-      {({ loading, data, error }) => {
-        if (loading) return <span>loading</span>;
-        if (error) return <span>something happened... Error!</span>;
-        return data.movies.map(movie => (
+const home = () => {
+  const { data, error, loading } = UseQuery(HOME_PAGE);
+  return (
+    <Container>
+      <Helmet>
+        <title>Home | MovieQL</title>
+      </Helmet>
+      {loading && "Loading"}
+      {error && "Something is wrong"}
+      {!loading &&
+        data &&
+        data.movies &&
+        data.movies.map(movie => (
           <Movie
             id={movie.id}
             key={movie.id}
@@ -29,10 +32,10 @@ const home = () => (
             rating={movie.rating}
             poster={movie.medium_cover_image}
           />
-        ));
+        ))}
       }}
-    </Query>
-  </Container>
-);
+    </Container>
+  );
+};
 
 export default home;
